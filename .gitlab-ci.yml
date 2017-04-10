@@ -19,6 +19,8 @@ template-test:
 
 rubocop-test:
   script:
+    - 'echo "inspecting following files with rubocop:"'
+    - "rubocop$RUBYSUFFIX -L"
     - "rubocop$RUBYSUFFIX -l --only-guide-cops"
   stage: test
 
