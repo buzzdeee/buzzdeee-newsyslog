@@ -10,6 +10,11 @@ puppet-lint:
     - "puppet-lint${RUBYSUFFIX} --relative --fail-on-warnings --with-filename --with-context manifests"
   stage: test
 
+metadata-json-lint:
+  script:
+    - "jsonlint${RUBYSUFFIX} metadata.json"
+  stage: test
+
 template-test:
   script:
     - "if [ -d templates ];then"
