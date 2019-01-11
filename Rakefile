@@ -25,5 +25,5 @@ task :validate do
 end
 
 RuboCop::RakeTask.new(:rubocop) do |t|
-  t.options = ['--display-cop-names']
+  t.options = ['--display-cop-names --except Metrics/BlockLength']
 end
