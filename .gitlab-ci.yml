@@ -2,42 +2,56 @@ stages:
   - test
   - deploy
 
-variables:
-  RUBYSUFFIX: '23'
-
-puppet-lint:
+spec-test:
+  tags:
+    - puppet
   script:
-    - "puppet-lint${RUBYSUFFIX} --relative --fail-on-warnings --with-filename --with-context manifests"
+    - "rake spec SPEC_OPTS='--format documentation'"
   stage: test
 
-metadata-json-lint:
+metadata-lint-test:
+  tags:
+    - puppet
   script:
-    - "jsonlint${RUBYSUFFIX} metadata.json"
+    - "rake metadata_lint"
   stage: test
 
-template-test:
+validate-test:
+  tags:
+    - puppet
   script:
-    - "if [ -d templates ];then"
-    - "erb$RUBYSUFFIX -x -T '-' templates/*erb | ruby${RUBYSUFFIX} -c"
-    - "fi"
+    - "rake validate"
+  stage: test
+
+puppet-lint-test:
+  tags:
+    - puppet
+  script:
+    - "rake lint"
   stage: test
 
 rubocop-test:
+  tags:
+    - puppet
   script:
-    - 'echo "inspecting following files with rubocop:"'
-    - "rubocop$RUBYSUFFIX -L"
-    - "rubocop$RUBYSUFFIX -l --only-guide-cops"
-  stage: test
-
-rake-test:
-  script:
-    - "rake$RUBYSUFFIX spec SPEC_OPTS='--format documentation'"
+    - "rake rubocop"
   stage: test
 
 deploy:
+  tags:
+    - puppet
   script:
-    - "sudo /usr/local/bin/r10k${RUBYSUFFIX} deploy module newsyslog -v"
+    - "/usr/local/bin/deploy.sh module newsyslog"
   stage: deploy
   only:
     - master
 
+publish:
+  tags:
+    - puppet
+  script:
+    - rake module:clean
+    - rake module:push
+  stage: deploy
+  only:
+    - tags

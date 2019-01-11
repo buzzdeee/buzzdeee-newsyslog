@@ -2,9 +2,14 @@
 
 require 'rubygems'
 require 'puppetlabs_spec_helper/rake_tasks'
+require 'puppet_blacksmith/rake_tasks'
 require 'puppet-lint/tasks/puppet-lint'
+require 'metadata-json-lint/rake_task'
+require 'rubocop/rake_task'
 PuppetLint.configuration.send('disable_80chars')
 PuppetLint.configuration.ignore_paths = ['spec/**/*.pp', 'pkg/**/*.pp']
+MetadataJsonLint.options.strict_dependencies = true
+MetadataJsonLint.options.strict_puppet_version = true
 
 desc 'Validate manifests, templates, and ruby files'
 task :validate do
@@ -17,4 +22,8 @@ task :validate do
   Dir['templates/**/*.erb'].each do |template|
     sh "erb -P -x -T '-' #{template} | ruby -c"
   end
+end
+
+RuboCop::RakeTask.new(:rubocop) do |t|
+  t.options = ['--display-cop-names']
 end
