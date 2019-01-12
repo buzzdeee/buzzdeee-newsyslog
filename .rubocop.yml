@@ -4,3 +4,6 @@ AllCops:
   DisplayStyleGuide: true
   ExtraDetails: true
   DefaultFormatter: simple
+
+Metrics/BlockLength:
+  Enabled: false
