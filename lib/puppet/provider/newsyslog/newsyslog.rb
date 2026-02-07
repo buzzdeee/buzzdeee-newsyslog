@@ -18,6 +18,7 @@ Puppet::Type.type(:newsyslog).provide :parsed,
   newsyslog_flags = case Facter.value(:operatingsystem)
                     when 'FreeBSD' then 'BCDGJNRUXZ'
                     when 'OpenBSD' then 'BFMZ'
+                    else 'A-Z'
                     end
 
   record_line :parsed,
